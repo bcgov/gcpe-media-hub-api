@@ -1,0 +1,10 @@
+[
+  { "Name": "Journal" },
+  { "Name": "Magazine" },
+  { "Name": "Newspaper" },
+  { "Name": "Newsletter" },
+  { "Name": "Podcast" },
+  { "Name": "Radio" },
+  { "Name": "TV" },
+  { "Name": "Web" }
+]

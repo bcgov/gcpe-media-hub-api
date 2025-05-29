@@ -1,0 +1,98 @@
+[
+  {
+    "Name": "Arabic",
+    "Code": "AR"
+  },
+  {
+    "Name": "Chinese Simplified",
+    "Code": "SC"
+  },
+  {
+    "Name": "Chinese Traditional",
+    "Code": "TC"
+  },
+  {
+    "Name": "Dutch",
+    "Code": "DUT"
+  },
+  {
+    "Name": "English",
+    "Code": "ENG"
+  },
+  {
+    "Name": "Farsi",
+    "Code": "FAR"
+  },
+  {
+    "Name": "Finnish",
+    "Code": "FIN"
+  },
+  {
+    "Name": "French",
+    "Code": "FR"
+  },
+  {
+    "Name": "Gujarati",
+    "Code": "GUJ"
+  },
+  {
+    "Name": "Hebrew",
+    "Code": "HE"
+  },
+  {
+    "Name": "Hindi",
+    "Code": "HI"
+  },
+  {
+    "Name": "Indonesian",
+    "Code": "IND"
+  },
+  {
+    "Name": "Japanese",
+    "Code": "JP"
+  },
+  {
+    "Name": "Korean",
+    "Code": "KO"
+  },
+  {
+    "Name": "Portuguese",
+    "Code": "POR"
+  },
+  {
+    "Name": "Punjabi",
+    "Code": "PUN"
+  },
+  {
+    "Name": "Russian",
+    "Code": "RU"
+  },
+  {
+    "Name": "Somali",
+    "Code": "SOM"
+  },
+  {
+    "Name": "Spanish",
+    "Code": "SPA"
+  },
+  {
+    "Name": "Swahili",
+    "Code": "SWA"
+  },
+  {
+    "Name": "Tagalog",
+    "Code": "TL"
+  },
+  {
+    "Name": "Ukrainian",
+    "Code": "UKR"
+  },
+  {
+    "Name": "Urdu",
+    "Code": "UR"
+  },
+  {
+    "Name": "Vietnamese",
+    "Code": "VN"
+  }
+]

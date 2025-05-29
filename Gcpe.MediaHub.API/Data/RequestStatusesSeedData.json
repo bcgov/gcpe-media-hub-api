@@ -1,0 +1,10 @@
+[
+  { "Name": "New" },
+  { "Name": "Pending" },
+  { "Name": "Rejected" },
+  { "Name": "Reviewed" },
+  { "Name": "Scheduled" },
+  { "Name": "Unavailable" },
+  { "Name": "Approved" },
+  { "Name": "Completed" }
+]

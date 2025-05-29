@@ -1,0 +1,13 @@
+[
+  { "Name": "Declined to Comment" },
+  { "Name": "Provided Backgrounder" },
+  { "Name": "Provided Scrum Audio" },
+  { "Name": "Provided Scrum Video" },
+  { "Name": "Provided Statement" },
+  { "Name": "Referred to Media Avail" },
+  { "Name": "Referred to Third Party" },
+  { "Name": "Reporter Dropped" },
+  { "Name": "Scheduled Interview" },
+  { "Name": "Unavailable" },
+  { "Name": "Other" }
+]
