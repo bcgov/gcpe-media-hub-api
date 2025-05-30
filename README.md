@@ -22,7 +22,18 @@ A .NET 9 Web API for managing media outlets, contacts, requests, and communicati
    ```
 2. **Create a connection string for a SQLite database in secrets.json**
    ```
-   "GcpeMediaHubAPIContext": "Data Source=GcpeMediaHubAPIContext-<Guid>.db"
+   {
+    "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+     }
+   },
+   "AllowedHosts": "*",
+   "ConnectionStrings": {
+     "GcpeMediaHubAPIContext": "Data Source=GcpeMediaHubAPIContext-<Guid>.db"
+    }
+   } 
    ```
 
 3. **Apply migrations & create database**
