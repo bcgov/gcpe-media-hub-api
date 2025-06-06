@@ -25,6 +25,9 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(c => c.RequestorContact)
                     .Include(m => m.LeadMinistry)
                     .Include(o => o.RequestorOutlet)
+                    .Include(s => s.RequestStatus)
+                    .Include(t => t.RequestType)
+                    .Include(r => r.RequestResolution)
                         .ToListAsync();
         }
 
@@ -32,7 +35,14 @@ namespace Gcpe.MediaHub.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MediaRequest>> GetMediaRequest(Guid id)
         {
-            var mediaRequest = await _context.MediaRequests.FindAsync(id);
+            var mediaRequest = await _context.MediaRequests
+                .Include(c => c.RequestorContact)
+                .Include(m => m.LeadMinistry)
+                .Include(o => o.RequestorOutlet)
+                .Include(s => s.RequestStatus)
+                .Include(t => t.RequestType)
+                .Include(r => r.RequestResolution)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (mediaRequest == null)
             {
@@ -43,7 +53,6 @@ namespace Gcpe.MediaHub.API.Controllers
         }
 
         // PUT: api/MediaRequests/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMediaRequest(Guid id, MediaRequest mediaRequest)
         {
@@ -74,7 +83,6 @@ namespace Gcpe.MediaHub.API.Controllers
         }
 
         // POST: api/MediaRequests
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<MediaRequest>> PostMediaRequest(MediaRequest mediaRequest)
         {
