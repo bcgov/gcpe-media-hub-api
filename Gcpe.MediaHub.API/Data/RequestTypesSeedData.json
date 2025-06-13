@@ -1,5 +1,6 @@
 [
-  { "Name": "Information" },
+  { "Name": "Background Information" },
+  { "Name": "Statement" },
   { "Name": "Interview" },
-  { "Name": "Scrum/Halls" }
+  { "Name": "Hallway Scrum" }
 ]
