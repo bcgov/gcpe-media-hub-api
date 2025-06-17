@@ -34,6 +34,8 @@ namespace Gcpe.MediaHub.API.Models
         public ICollection<Ministry> AdditionalMinistries { get; set; } = new List<Ministry>();
         public Guid? AssignedUserId { get; set; }
         public User? AssignedUser { get; set; }
+        public Guid? FYIContactUserId { get; set; }
+        public User? FYIContactUser { get; set; }
 
         [MaxLength(1000)]
         public string Response { get; set; } = string.Empty;
