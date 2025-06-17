@@ -46,6 +46,11 @@ namespace Gcpe.MediaHub.API.Data
                 .WithMany(m => m.AdditionalMediaRequests)
                 .UsingEntity(j => j.ToTable("MediaRequestAdditionalMinistries"));
 
+            modelBuilder.Entity<MediaRequest>()
+                .HasOne(m => m.FYIContactUser)
+                .WithMany()
+                .HasForeignKey(m => m.FYIContactUserId);
+
             modelBuilder.Entity<SocialMedia>()
                 .HasOne(sm => sm.MediaOutlet)
                 .WithMany(o => o.SocialMedias)

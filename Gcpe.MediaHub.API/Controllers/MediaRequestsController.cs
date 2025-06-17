@@ -29,6 +29,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(t => t.RequestType)
                     .Include(r => r.RequestResolution)
                     .Include(c => c.AssignedUser)
+                    .Include(f => f.FYIContactUser)
                         .ToListAsync();
         }
 

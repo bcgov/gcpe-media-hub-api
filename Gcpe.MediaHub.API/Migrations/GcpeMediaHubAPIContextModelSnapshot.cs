@@ -273,6 +273,9 @@ namespace Gcpe.MediaHub.API.Migrations
                     b.Property<DateTimeOffset>("Deadline")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("FYIContactUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("LeadMinistryId")
                         .HasColumnType("INTEGER");
 
@@ -315,6 +318,8 @@ namespace Gcpe.MediaHub.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedUserId");
+
+                    b.HasIndex("FYIContactUserId");
 
                     b.HasIndex("LeadMinistryId");
 
@@ -668,6 +673,10 @@ namespace Gcpe.MediaHub.API.Migrations
                         .WithMany("MediaRequests")
                         .HasForeignKey("AssignedUserId");
 
+                    b.HasOne("Gcpe.MediaHub.API.Models.User", "FYIContactUser")
+                        .WithMany()
+                        .HasForeignKey("FYIContactUserId");
+
                     b.HasOne("Gcpe.MediaHub.API.Models.Ministry", "LeadMinistry")
                         .WithMany("LeadMediaRequests")
                         .HasForeignKey("LeadMinistryId");
@@ -699,6 +708,8 @@ namespace Gcpe.MediaHub.API.Migrations
                         .HasForeignKey("RequestorOutletId");
 
                     b.Navigation("AssignedUser");
+
+                    b.Navigation("FYIContactUser");
 
                     b.Navigation("LeadMinistry");
 
