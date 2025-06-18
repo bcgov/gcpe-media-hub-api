@@ -34,19 +34,7 @@ builder.Services.AddAuthentication("BasicAuthentication")
 
 builder.Services.AddAuthorization();
 
-// Add CORS
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
-
-// Add CORS
+// Add CORS for localhost development
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
