@@ -20,39 +20,48 @@ namespace Gcpe.MediaHub.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContactDto>>> GetContact()
         {
-            var contacts = await _context.MediaContacts
-                .Include(c => c.JobTitle)
-                .Include(c => c.MediaOutletContactRelationships)
-                    .ThenInclude(rel => rel.MediaOutlet)
-                .Include(c => c.MediaOutletContactRelationships)
-                    .ThenInclude(rel => rel.Emails)
-                .Include(c => c.MediaOutletContactRelationships)
-                    .ThenInclude(rel => rel.PhoneNumbers)
-                .ToListAsync();
-
-            var result = contacts.Select(contact => new ContactDto
+            try
             {
-                Id = contact.Id,
-                FirstName = contact.FirstName,
-                LastName = contact.LastName,
-                Email = contact.Email,
-                IsActive = contact.IsActive,
-                JobTitle = contact.JobTitle?.Name ?? "",
 
-                Outlets = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
+                var contacts = await _context.MediaContacts
+                    .Include(c => c.JobTitle)
+                    .Include(c => c.MediaOutletContactRelationships)
+                        .ThenInclude(rel => rel.MediaOutlet)
+                    .Include(c => c.MediaOutletContactRelationships)
+                        .ThenInclude(rel => rel.Emails)
+                    .Include(c => c.MediaOutletContactRelationships)
+                        .ThenInclude(rel => rel.PhoneNumbers)
+                    .ToListAsync();
+
+                var result = contacts.Select(contact => new ContactDto
                 {
-                    OutletName = rel.MediaOutlet.OutletName,
-                    OutletEmail = rel.MediaOutlet.Email,
-                    ContactEmails = rel.Emails.Select(e => e.EmailAddress).ToList(),
-                    ContactPhones = rel.PhoneNumbers
-                        .Select(p => string.IsNullOrWhiteSpace(p.Extension)
-                            ? p.PhoneNumber
-                            : $"{p.PhoneNumber} ext. {p.Extension}")
-                        .ToList()
-                }).ToList()
-            }).ToList();
+                    Id = contact.Id,
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    Email = contact.Email,
+                    IsActive = contact.IsActive,
+                    JobTitle = contact.JobTitle?.Name ?? "",
 
-            return result;
+                    Outlets = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
+                    {
+                        OutletName = rel.MediaOutlet.OutletName,
+                        OutletEmail = rel.MediaOutlet.Email,
+                        ContactEmails = rel.Emails.Select(e => e.EmailAddress).ToList(),
+                        ContactPhones = rel.PhoneNumbers
+                            .Select(p => string.IsNullOrWhiteSpace(p.Extension)
+                                ? p.PhoneNumber
+                                : $"{p.PhoneNumber} ext. {p.Extension}")
+                            .ToList()
+                    }).ToList()
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
 
 

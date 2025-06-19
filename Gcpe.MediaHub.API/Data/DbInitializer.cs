@@ -384,7 +384,8 @@ namespace Gcpe.MediaHub.API.Data
                         RequestTypeId = requestType?.Id,
                         RequestorContactId = contact?.Id,
                         RequestorOutletId = outlet?.Id,
-                        RequestNo = 124
+                        RequestNo = 124,
+                        FYIContactUserId = user?.Id,
                     },
                     new MediaRequest
                     {
@@ -398,7 +399,8 @@ namespace Gcpe.MediaHub.API.Data
                         RequestTypeId = requestType?.Id,
                         RequestorContactId = contact?.Id,
                         RequestorOutletId = outlet?.Id,
-                        RequestNo = 125
+                        RequestNo = 125,
+                        FYIContactUserId = user?.Id,
                     },
                     new MediaRequest
                     {
@@ -412,7 +414,8 @@ namespace Gcpe.MediaHub.API.Data
                         RequestTypeId = requestType?.Id,
                         RequestorContactId = contact?.Id,
                         RequestorOutletId = outlet?.Id,
-                        RequestNo = 126
+                        RequestNo = 126,
+                        FYIContactUserId = user?.Id,
                     }
                 }
             );
