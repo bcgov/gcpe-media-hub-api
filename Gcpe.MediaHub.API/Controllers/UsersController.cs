@@ -27,14 +27,32 @@ namespace Gcpe.MediaHub.API.Controllers
         [HttpGet("{idir}")]
         public async Task<ActionResult<User>> GetUserByIdir(string idir)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.IDIR == idir);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                // Verify idir format - shouldn't contain spaces
+                if (idir.Contains(" "))
+                {
+                    return BadRequest("Invalid IDIR format");
+                }
 
-            return user;
+                // Get all users and filter in memory for case-insensitive comparison
+                var users = await _context.Users.ToListAsync();
+                var user = users.FirstOrDefault(u =>
+                    u.IDIR.Equals(idir, StringComparison.OrdinalIgnoreCase));
+
+                if (user == null)
+                {
+                    return NotFound($"User with IDIR '{idir}' not found");
+                }
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error retrieving user with IDIR '{idir}': {ex.Message}");
+                Console.Error.WriteLine(ex.StackTrace);
+                return StatusCode(500, $"Error retrieving user: {ex.Message}");
+            }
         }
     }
 }

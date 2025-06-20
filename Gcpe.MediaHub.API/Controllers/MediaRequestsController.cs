@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Gcpe.MediaHub.API.Data;
 using Gcpe.MediaHub.API.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Gcpe.MediaHub.API.Controllers
 {
@@ -10,10 +11,12 @@ namespace Gcpe.MediaHub.API.Controllers
     public class MediaRequestsController : ControllerBase
     {
         private readonly GcpeMediaHubAPIContext _context;
+        private readonly ILogger<MediaRequestsController> _logger;
 
-        public MediaRequestsController(GcpeMediaHubAPIContext context)
+        public MediaRequestsController(GcpeMediaHubAPIContext context, ILogger<MediaRequestsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/MediaRequests
@@ -86,12 +89,49 @@ namespace Gcpe.MediaHub.API.Controllers
 
         // POST: api/MediaRequests
         [HttpPost]
-        public async Task<ActionResult<MediaRequest>> PostMediaRequest(MediaRequest mediaRequest)
+        public async Task<IActionResult> PostMediaRequest(MediaRequest mediaRequest)
         {
-            _context.MediaRequests.Add(mediaRequest);
-            await _context.SaveChangesAsync();
+            try
+            {
+                // Validate the incoming request
+                if (mediaRequest == null)
+                {
+                    return BadRequest("MediaRequest cannot be null.");
+                }
 
-            return CreatedAtAction("GetMediaRequest", new { id = mediaRequest.Id }, mediaRequest);
+                // Ensure lead ministry is valid
+                var leadMinistry = await _context.Ministries.FindAsync(mediaRequest.LeadMinistryId);
+                if (leadMinistry == null)
+                {
+                    return BadRequest($"Lead ministry with ID {mediaRequest.LeadMinistryId} does not exist.");
+                }
+                mediaRequest.LeadMinistry = leadMinistry;
+
+                // Handle additional ministries
+                var additionalMinistryIds = mediaRequest.AdditionalMinistries.Select(m => m.Id).ToList();
+                var existingMinistries = await _context.Ministries
+                    .Where(m => additionalMinistryIds.Contains(m.Id))
+                    .ToListAsync();
+
+                if (existingMinistries.Count != additionalMinistryIds.Count)
+                {
+                    return BadRequest("One or more additional ministries do not exist.");
+                }
+
+                mediaRequest.AdditionalMinistries = existingMinistries;
+
+                // Add the media request to the database
+                _context.MediaRequests.Add(mediaRequest);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetMediaRequest", new { id = mediaRequest.Id }, mediaRequest);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an error response
+                _logger.LogError(ex, "Error occurred while creating media request.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // DELETE: api/MediaRequests/5

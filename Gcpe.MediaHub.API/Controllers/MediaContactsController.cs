@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Gcpe.MediaHub.API.Data;
 using Gcpe.MediaHub.API.Models;
+using System.Text.RegularExpressions;
 
 namespace Gcpe.MediaHub.API.Controllers
 {
@@ -77,6 +78,50 @@ namespace Gcpe.MediaHub.API.Controllers
             }
 
             return contact;
+        }
+
+        // GET: api/MediaContacts/search/{fullName}
+        [HttpGet("search/{fullName}")]
+        public async Task<ActionResult<MediaContact>> GetMediaContactByFullName(string fullName)
+        {
+            try
+            {
+                // Remove extra spaces and split the name
+                var cleanName = Regex.Replace(fullName?.Trim() ?? "", @"\s+", " ");
+                var nameParts = cleanName.Split(' ');
+
+                if (string.IsNullOrEmpty(cleanName) || nameParts.Length != 2)
+                {
+                    return BadRequest("Full name must be in 'FirstName LastName' format");
+                }
+
+                var firstName = nameParts[0];
+                var lastName = nameParts[1];
+
+                // Get all active contacts and filter in memory
+                var allContacts = await _context.MediaContacts
+                    .Include(c => c.JobTitle)
+                    .Where(c => c.IsActive)
+                    .ToListAsync();
+
+                var contact = allContacts.FirstOrDefault(c =>
+                    c.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                    c.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+
+                if (contact == null)
+                {
+                    return NotFound($"No active contact found with name '{fullName}'");
+                }
+
+                return contact;
+            }
+            catch (Exception ex)
+            {
+                var error = $"Error searching for contact '{fullName}': {ex.Message}";
+                Console.Error.WriteLine(error);
+                Console.Error.WriteLine(ex.StackTrace);
+                return StatusCode(500, error);
+            }
         }
 
         // PUT: api/Contacts/5
