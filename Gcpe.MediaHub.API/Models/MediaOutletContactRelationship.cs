@@ -13,5 +13,4 @@
         public List<MediaContactEmail> Emails { get; set; } = new();
         public List<MediaContactPhone> PhoneNumbers { get; set; } = new();
     }
-
 }
