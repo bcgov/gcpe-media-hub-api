@@ -32,6 +32,7 @@ namespace Gcpe.MediaHub.API.Controllers
                         .ThenInclude(rel => rel.Emails)
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.PhoneNumbers)
+                    .Include(c => c.MediaRequests)
                     .ToListAsync();
 
                 var result = contacts.Select(contact => new ContactDto
@@ -53,7 +54,12 @@ namespace Gcpe.MediaHub.API.Controllers
                                 ? p.PhoneNumber
                                 : $"{p.PhoneNumber} ext. {p.Extension}")
                             .ToList()
-                    }).ToList()
+                    }).ToList(),
+                    Requests = contact.MediaRequests.Select(rel => new MediaRequestDto
+                    {
+                        RequestTitle = rel.RequestTitle,
+                        LeadMinistry = rel.LeadMinistry,
+                    }).ToList(),
                 }).ToList();
 
                 return result;
@@ -198,6 +204,7 @@ namespace Gcpe.MediaHub.API.Controllers
         public string JobTitle { get; set; } = "";
 
         public List<ContactOutletDto> Outlets { get; set; } = new();
+        public List<MediaRequestDto> Requests { get; set; } = new();
     }
 
     public class ContactOutletDto
@@ -206,6 +213,17 @@ namespace Gcpe.MediaHub.API.Controllers
         public string OutletEmail { get; set; } = "";
         public List<string> ContactEmails { get; set; } = new();
         public List<string> ContactPhones { get; set; } = new();
+        public bool IsMajorMedia { get; set; } = false;
     }
+
+    public class MediaRequestDto
+    {
+        public string RequestTitle { get; set; } = string.Empty;
+        public DateTime ReceivedOn { get; set; } = new DateTime();
+        public DateTime Deadline { get; set; } = new DateTime();
+        public Ministry? LeadMinistry { get; set; } = new Ministry();
+    }
+
+    
 
 }
