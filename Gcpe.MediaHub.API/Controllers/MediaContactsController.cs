@@ -189,35 +189,26 @@ namespace Gcpe.MediaHub.API.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("GetSocialMedias")]
+        public async Task<ActionResult<IEnumerable<SocialMediaCompanyDto>>> GetSocialMedias()
+        {
+            var companies = await _context.SocialMediaCompanies.ToListAsync();
+
+            var result = companies.Select(company => new SocialMediaCompanyDto
+            {
+                Id = company.Id,
+                Company = company.Name,
+            }).ToList();
+
+            return result;
+        }
+
         private bool ContactExists(Guid id)
         {
             return _context.MediaContacts.Any(e => e.Id == id);
         }
 
-        // GET: api/SocialMediaCompanies
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<SocialMediaCompanyDto>>> GetSocialMediaCompanies()
-        {
-            try
-            {
-                var companies = await _context.SocialMediaCompanies
-                    .Include(s => s.Id)
-                    .Include(s => s.Name)
-                    .ToListAsync();
-
-                var result = companies.Select(company => new SocialMediaCompanyDto
-                {
-                    Id = company.Id,
-                    Company = company.Name,
-                }).ToList();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
     }
 
     public class ContactDto
