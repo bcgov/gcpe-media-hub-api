@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Gcpe.MediaHub.API.Data;
 using Gcpe.MediaHub.API.Models;
 using System.Text.RegularExpressions;
+using Gcpe.MediaHub.API.DTO;
 
 namespace Gcpe.MediaHub.API.Controllers
 {
@@ -192,6 +193,31 @@ namespace Gcpe.MediaHub.API.Controllers
         {
             return _context.MediaContacts.Any(e => e.Id == id);
         }
+
+        // GET: api/SocialMediaCompanies
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SocialMediaCompanyDto>>> GetSocialMediaCompanies()
+        {
+            try
+            {
+                var companies = await _context.SocialMediaCompanies
+                    .Include(s => s.Id)
+                    .Include(s => s.Name)
+                    .ToListAsync();
+
+                var result = companies.Select(company => new SocialMediaCompanyDto
+                {
+                    Id = company.Id,
+                    Company = company.Name,
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 
     public class ContactDto
@@ -207,23 +233,5 @@ namespace Gcpe.MediaHub.API.Controllers
         public List<MediaRequestDto> Requests { get; set; } = new();
     }
 
-    public class ContactOutletDto
-    {
-        public string OutletName { get; set; } = "";
-        public string OutletEmail { get; set; } = "";
-        public List<string> ContactEmails { get; set; } = new();
-        public List<string> ContactPhones { get; set; } = new();
-        public bool IsMajorMedia { get; set; } = false;
-    }
-
-    public class MediaRequestDto
-    {
-        public string RequestTitle { get; set; } = string.Empty;
-        public DateTime ReceivedOn { get; set; } = new DateTime();
-        public DateTime Deadline { get; set; } = new DateTime();
-        public Ministry? LeadMinistry { get; set; } = new Ministry();
-    }
-
-    
 
 }
