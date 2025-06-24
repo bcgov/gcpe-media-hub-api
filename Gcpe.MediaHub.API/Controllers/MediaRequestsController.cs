@@ -120,6 +120,14 @@ namespace Gcpe.MediaHub.API.Controllers
 
                 mediaRequest.AdditionalMinistries = existingMinistries;
 
+                // Generate and assign a unique RequestNo
+                int maxRequestNo = 0;
+                if (await _context.MediaRequests.AnyAsync())
+                {
+                    maxRequestNo = await _context.MediaRequests.MaxAsync(r => r.RequestNo);
+                }
+                mediaRequest.RequestNo = maxRequestNo + 1;
+
                 // Add the media request to the database
                 _context.MediaRequests.Add(mediaRequest);
                 await _context.SaveChangesAsync();
