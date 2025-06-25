@@ -348,6 +348,7 @@ namespace Gcpe.MediaHub.API.Data
             var user = new User
             {
                 IDIR = "BCSTEST",
+                FullName = "BCS Test User",
             };
 
             context.Users.Add(user);
