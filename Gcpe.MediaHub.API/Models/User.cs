@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public string IDIR { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public ICollection<MediaRequest> MediaRequests { get; set; } = new List<MediaRequest>();
     }
 }
