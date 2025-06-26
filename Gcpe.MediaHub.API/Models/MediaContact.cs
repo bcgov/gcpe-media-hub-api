@@ -32,6 +32,7 @@ namespace Gcpe.MediaHub.API.Models
         public ICollection<MediaOutletContactRelationship> MediaOutletContactRelationships { get; set; } = new List<MediaOutletContactRelationship>();
         public ICollection<MediaRequest> MediaRequests { get; set; } = new List<MediaRequest>();
         public ICollection<SocialMedia> SocialMedias { get; set; } = new List<SocialMedia>();
+        public ICollection<PersonalPhoneNumber> PhoneNumbers { get; set; } = new List<PersonalPhoneNumber>();
 
         [MaxLength(50)]
         public string? Location { get; set; }
