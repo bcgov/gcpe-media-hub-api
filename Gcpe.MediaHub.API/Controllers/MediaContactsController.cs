@@ -77,8 +77,8 @@ namespace Gcpe.MediaHub.API.Controllers
         public async Task<ActionResult<MediaContact>> GetContact(Guid id)
         {
             var contact = await _context.MediaContacts
-            .Include(c => c.mediaOutlet)
-            .FindAsync(id);
+                .Include(c => c.MediaOutletContactRelationships)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (contact == null)
             {
