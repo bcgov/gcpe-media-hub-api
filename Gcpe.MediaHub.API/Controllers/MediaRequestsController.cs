@@ -20,6 +20,8 @@ namespace Gcpe.MediaHub.API.Controllers
         }
 
         // GET: api/MediaRequests
+        // hold on when using this endpoint, might have some performance issues
+        // due to the number of includes and the size of the data
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MediaRequest>>> GetMediaRequests()
         {
