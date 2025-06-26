@@ -35,6 +35,35 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(f => f.FYIContactUser)
                         .ToListAsync();
         }
+        // GET: api/MediaRequests/dtos
+        [HttpGet("dtos")]
+        public async Task<ActionResult<IEnumerable<Gcpe.MediaHub.API.DTO.RequestDto>>> GetMediaRequestDtos()
+        {
+            var requests = await _context.MediaRequests
+                .Include(c => c.RequestorContact)
+                .Include(m => m.LeadMinistry)
+                .Include(s => s.RequestStatus)
+                .Include(a => a.AssignedUser)
+                .Include(am => am.AdditionalMinistries)
+                .ToListAsync();
+
+            var dtos = requests.Select(r => new Gcpe.MediaHub.API.DTO.RequestDto
+            {
+                Id = r.Id,
+                RequestTitle = r.RequestTitle,
+                ReceivedOn = r.ReceivedOn,
+                Deadline = r.Deadline,
+                LeadMinistryAbbr = r.LeadMinistry?.Acronym ?? string.Empty,
+                RequestorContactFirstName = r.RequestorContact?.FirstName ?? string.Empty,
+                RequestorContactLastName = r.RequestorContact?.LastName ?? string.Empty,
+                RequestNo = r.RequestNo,
+                AdditionalMinistriesAbbr = r.AdditionalMinistries?.Select(m => m.Acronym ?? string.Empty).ToList() ?? new List<string>(),
+                AssignedToFullName = r.AssignedUser?.FullName ?? string.Empty,
+                RequestStatus = r.RequestStatus?.Name ?? string.Empty
+            }).ToList();
+
+            return dtos;
+        }
 
         // GET: api/MediaRequests/5
         [HttpGet("{id}")]
