@@ -24,7 +24,6 @@ namespace Gcpe.MediaHub.API.Controllers
         {
             try
             {
-
                 var contacts = await _context.MediaContacts
                     .Include(c => c.JobTitle)
                     .Include(c => c.MediaOutletContactRelationships)
@@ -78,7 +77,9 @@ namespace Gcpe.MediaHub.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MediaContact>> GetContact(Guid id)
         {
-            var contact = await _context.MediaContacts.FindAsync(id);
+            var contact = await _context.MediaContacts
+                .Include(c => c.MediaOutletContactRelationships)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (contact == null)
             {
