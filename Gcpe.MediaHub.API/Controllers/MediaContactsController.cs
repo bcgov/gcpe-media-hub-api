@@ -58,6 +58,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     }).ToList(),
                     Requests = contact.MediaRequests.Select(rel => new MediaRequestDto
                     {
+                        Id = rel.Id,
                         RequestTitle = rel.RequestTitle,
                         LeadMinistry = rel.LeadMinistry,
                     }).ToList(),
