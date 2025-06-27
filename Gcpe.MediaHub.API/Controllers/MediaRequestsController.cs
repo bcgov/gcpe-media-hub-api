@@ -20,6 +20,8 @@ namespace Gcpe.MediaHub.API.Controllers
         }
 
         // GET: api/MediaRequests
+        // hold on when using this endpoint, might have some performance issues
+        // due to the number of includes and the size of the data
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MediaRequest>>> GetMediaRequests()
         {
@@ -148,6 +150,20 @@ namespace Gcpe.MediaHub.API.Controllers
                 }
 
                 mediaRequest.AdditionalMinistries = existingMinistries;
+
+                // Set RequestorOutletId from RequestorContact's first outlet if not provided
+                if (mediaRequest.RequestorOutletId == null && mediaRequest.RequestorContactId != null)
+                {
+                    var contact = await _context.MediaContacts
+                        .Include(c => c.MediaOutletContactRelationships)
+                        .FirstOrDefaultAsync(c => c.Id == mediaRequest.RequestorContactId);
+
+                    var outletId = contact?.MediaOutletContactRelationships?.FirstOrDefault()?.MediaOutletId;
+                    if (outletId != null)
+                    {
+                        mediaRequest.RequestorOutletId = outletId;
+                    }
+                }
 
                 // Generate and assign a unique RequestNo
                 int maxRequestNo = 0;
