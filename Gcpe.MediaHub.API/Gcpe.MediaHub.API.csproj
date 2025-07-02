@@ -22,4 +22,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Copy any SQLite DB file matching the pattern to the Data subfolder in the output directory -->
+    <None Update="GcpeMediaHubAPIContext-*.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Database\testdb.sqlite</TargetPath>
+    </None>
+  </ItemGroup>
+
 </Project>
