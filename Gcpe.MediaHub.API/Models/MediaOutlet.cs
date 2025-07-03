@@ -17,12 +17,18 @@ namespace Gcpe.MediaHub.API.Models
 
         [Url(ErrorMessage = "Please enter a valid URL")]
         public string Website { get; set; } = string.Empty;
+
+        // Self-referencing relationship
+        public Guid? ParentOutletId { get; set; }
+        public MediaOutlet? ParentOutlet { get; set; }
+        public ICollection<MediaOutlet> ChildOutlets { get; set; } = new List<MediaOutlet>();
+
         public PhoneNumber? PhoneNumber { get; set; }
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
         public ICollection<MediaType> MediaTypes { get; set; } = new List<MediaType>();
         public ICollection<WrittenLanguage> WrittenLanguages { get; set; } = new List<WrittenLanguage>();
         public ICollection<SocialMedia> SocialMedias { get; set; } = new List<SocialMedia>();
+        public ICollection<MediaOutletPhoneNumber> MediaOutletPhoneNumbers { get; set; } = new List<MediaOutletPhoneNumber>();
         public ICollection<MediaRequest> MediaRequests { get; set; } = new List<MediaRequest>();
-
     }
 }

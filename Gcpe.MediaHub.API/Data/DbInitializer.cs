@@ -436,10 +436,10 @@ namespace Gcpe.MediaHub.API.Data
             SeedRequestResolutions(context);
             SeedRequestTypes(context);
             SeedMinistries(context);
-            SeedMediaOutlets(context);
-            SeedContacts(context);
-            SeedUsers(context);
-            SeedMediaRequests(context);
+            // SeedMediaOutlets(context);
+            // SeedContacts(context);
+            // SeedUsers(context);
+            // SeedMediaRequests(context);
         }
     }
 }
