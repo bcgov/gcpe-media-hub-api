@@ -35,16 +35,20 @@ builder.Services.AddAuthentication("BasicAuthentication")
 builder.Services.AddAuthorization();
 
 // Add CORS for localhost development
-builder.Services.AddCors(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("https://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:5173", "http://localhost:5229", "http://localhost:7145")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+    });
+}
 
 var app = builder.Build();
 
@@ -69,7 +73,6 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
 
 app.MapControllers();
 

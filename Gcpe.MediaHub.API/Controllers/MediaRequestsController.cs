@@ -130,6 +130,17 @@ namespace Gcpe.MediaHub.API.Controllers
                     return BadRequest("MediaRequest cannot be null.");
                 }
 
+                // Set RequestStatusId to the Id of status 'In Progress' if not already set
+                if (mediaRequest.RequestStatusId == null)
+                {
+                    var inProgressStatus = await _context.RequestStatuses.FirstOrDefaultAsync(s => s.Name == "In Progress");
+                    if (inProgressStatus == null)
+                    {
+                        return BadRequest("Request status 'In Progress' not found.");
+                    }
+                    mediaRequest.RequestStatusId = inProgressStatus.Id;
+                }
+
                 // Ensure lead ministry is valid
                 var leadMinistry = await _context.Ministries.FindAsync(mediaRequest.LeadMinistryId);
                 if (leadMinistry == null)
