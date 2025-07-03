@@ -54,5 +54,26 @@ namespace Gcpe.MediaHub.API.Controllers
                 return StatusCode(500, $"Error retrieving user: {ex.Message}");
             }
         }
+
+        // GET: api/Users/byId/{id}
+        [HttpGet("byId/{id}")]
+        public async Task<ActionResult<User>> GetUserById(int id)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
+                if (user == null)
+                {
+                    return NotFound($"User with Id '{id}' not found");
+                }
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error retrieving user with Id '{id}': {ex.Message}");
+                Console.Error.WriteLine(ex.StackTrace);
+                return StatusCode(500, $"Error retrieving user: {ex.Message}");
+            }
+        }
     }
 }
