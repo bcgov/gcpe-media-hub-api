@@ -167,32 +167,51 @@ namespace Gcpe.MediaHub.API.Data
                 context.SaveChanges();
             }
 
-            context.MediaOutlets.AddRange(new List<MediaOutlet>
+            var cbcNetwork = new MediaOutlet
             {
-                new MediaOutlet
-                {
-                    OutletName = "Maple Current",
-                    IsMajorMedia = true,
-                    Website = "http://www.maplecurrent.ca",
-                    Email = "admin@maplecurrent.ca"
-                },
-                new MediaOutlet
-                {
-                    OutletName = "Voix du Nord",
-                    IsMajorMedia = true,
-                    Website = "http://www.voixdunord.ca",
-                    Email = "admin@voixdunord.ca"
-                },
-                new MediaOutlet
-                {
-                    OutletName = "True North Pulse Media",
-                    IsMajorMedia = true,
-                    Website = "http://www.truenorthpulsemedia.ca",
-                    Email = "admin@truenorthpulsemedia.ca"
-                },
-            }
+                OutletName = "CBC",
+                IsMajorMedia = true,
+                Website = "http://www.cbc.ca",
+                Email = "admin@cbc.ca"
+            };
 
-            );
+            context.MediaOutlets.Add(cbcNetwork);
+            context.SaveChanges();
+
+            var cbcVancouver = new MediaOutlet
+            {
+                OutletName = "CBC Vancouver",
+                IsMajorMedia = true,
+                Website = "http://www.cbc.ca/vancouver",
+                Email = "vancouver@cbc.ca",
+                ParentOutletId = cbcNetwork.Id
+            };
+
+            var mapleCurrent = new MediaOutlet
+            {
+                OutletName = "Maple Current",
+                IsMajorMedia = true,
+                Website = "http://www.maplecurrent.ca",
+                Email = "admin@maplecurrent.ca"
+            };
+
+            var voixDuNord = new MediaOutlet
+            {
+                OutletName = "Voix du Nord",
+                IsMajorMedia = true,
+                Website = "http://www.voixdunord.ca",
+                Email = "admin@voixdunord.ca"
+            };
+
+            var trueNorth = new MediaOutlet
+            {
+                OutletName = "True North Pulse Media",
+                IsMajorMedia = true,
+                Website = "http://www.truenorthpulsemedia.ca",
+                Email = "admin@truenorthpulsemedia.ca"
+            };
+
+            context.MediaOutlets.AddRange(cbcVancouver, mapleCurrent, voixDuNord, trueNorth);
             context.SaveChanges();
         }
 
@@ -436,10 +455,10 @@ namespace Gcpe.MediaHub.API.Data
             SeedRequestResolutions(context);
             SeedRequestTypes(context);
             SeedMinistries(context);
-            // SeedMediaOutlets(context);
-            // SeedContacts(context);
-            // SeedUsers(context);
-            // SeedMediaRequests(context);
+            SeedMediaOutlets(context);
+            SeedContacts(context);
+            SeedUsers(context);
+            SeedMediaRequests(context);
         }
     }
 }
