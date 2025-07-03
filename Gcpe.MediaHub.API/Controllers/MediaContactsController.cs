@@ -34,7 +34,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.PhoneNumbers)
                     .Include(c => c.MediaRequests)
-                    .Include(c => c.PhoneNumbers)
+                    //.Include(c => c.PhoneNumbers)
                     .ToListAsync();
 
                 var result = contacts.Select(contact => new MediaContactDto
