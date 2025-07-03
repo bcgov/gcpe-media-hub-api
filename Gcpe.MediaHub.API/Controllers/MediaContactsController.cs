@@ -20,7 +20,7 @@ namespace Gcpe.MediaHub.API.Controllers
 
         // GET: api/Contacts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactDto>>> GetContact()
+        public async Task<ActionResult<IEnumerable<MediaContactDto>>> GetContact()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(c => c.PhoneNumbers)
                     .ToListAsync();
 
-                var result = contacts.Select(contact => new ContactDto
+                var result = contacts.Select(contact => new MediaContactDto
                 {
                     Id = contact.Id,
                     FirstName = contact.FirstName,
@@ -44,17 +44,15 @@ namespace Gcpe.MediaHub.API.Controllers
                     Email = contact.Email,
                     IsActive = contact.IsActive,
                     JobTitle = contact.JobTitle?.Name ?? "",
+                 //   PhoneNumbers = contact.PhoneNumbers,
 
-                    Outlets = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
+                    MediaOutletContactRelationships = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
                     {
                         OutletName = rel.MediaOutlet.OutletName,
                         OutletEmail = rel.MediaOutlet.Email,
                         ContactEmails = rel.Emails.Select(e => e.EmailAddress).ToList(),
-                        ContactPhones = rel.PhoneNumbers
-                            .Select(p => string.IsNullOrWhiteSpace(p.Extension)
-                                ? p.PhoneNumber
-                                : $"{p.PhoneNumber} ext. {p.Extension}")
-                            .ToList()
+                        //ContactPhones = rel.PhoneNumbers, 
+                            
                     }).ToList(),
                     Requests = contact.MediaRequests.Select(rel => new MediaRequestDto
                     {
@@ -168,10 +166,12 @@ namespace Gcpe.MediaHub.API.Controllers
         // POST: api/Contacts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MediaContact>> PostContact(MediaContact contact)
+        public async Task<ActionResult<MediaContact>> PostContact(MediaContactDto contact)
         {
-            _context.MediaContacts.Add(contact);
-            await _context.SaveChangesAsync();
+
+
+            //_context.MediaContacts.Add(contact);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
         }
@@ -214,7 +214,7 @@ namespace Gcpe.MediaHub.API.Controllers
 
     }
 
-    public class ContactDto
+    public class MediaContactDto
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; } = "";
@@ -223,7 +223,8 @@ namespace Gcpe.MediaHub.API.Controllers
         public bool IsActive { get; set; }
         public string JobTitle { get; set; } = "";
 
-        public List<ContactOutletDto> Outlets { get; set; } = new();
+        public List<ContactOutletDto> MediaOutletContactRelationships { get; set; } = new();
+      //  public List<PersonalPhoneNumberDto> PhoneNumbers { get; set; } = new();
         public List<MediaRequestDto> Requests { get; set; } = new();
     }
 
