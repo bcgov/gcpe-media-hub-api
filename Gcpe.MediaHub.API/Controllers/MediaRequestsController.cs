@@ -78,6 +78,8 @@ namespace Gcpe.MediaHub.API.Controllers
                 .Include(s => s.RequestStatus)
                 .Include(t => t.RequestType)
                 .Include(r => r.RequestResolution)
+                .Include(a => a.AssignedUser)
+                .Include(f => f.FYIContactUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (mediaRequest == null)
@@ -99,6 +101,8 @@ namespace Gcpe.MediaHub.API.Controllers
                 .Include(s => s.RequestStatus)
                 .Include(t => t.RequestType)
                 .Include(r => r.RequestResolution)
+                .Include(a => a.AssignedUser)
+                .Include(f => f.FYIContactUser)
                 .FirstOrDefaultAsync(m => m.RequestNo == requestNo);
 
             if (mediaRequest == null)
