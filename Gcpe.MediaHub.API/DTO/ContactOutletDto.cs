@@ -5,6 +5,7 @@ namespace Gcpe.MediaHub.API.DTO
     public class ContactOutletDto
     {
         public string OutletName { get; set; } = "";
+        public Guid OutletId { get; set; }
         public string OutletEmail { get; set; } = "";
         public List<string> ContactEmails { get; set; } = new();
         public List<MediaContactPhoneDto> ContactPhones { get; set; } = new();

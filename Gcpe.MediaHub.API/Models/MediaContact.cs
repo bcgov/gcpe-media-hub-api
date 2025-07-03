@@ -32,9 +32,22 @@ namespace Gcpe.MediaHub.API.Models
         public ICollection<MediaOutletContactRelationship> MediaOutletContactRelationships { get; set; } = new List<MediaOutletContactRelationship>();
         public ICollection<MediaRequest> MediaRequests { get; set; } = new List<MediaRequest>();
         public ICollection<SocialMedia> SocialMedias { get; set; } = new List<SocialMedia>();
-        public ICollection<PersonalPhoneNumber> PhoneNumbers { get; set; } = new List<PersonalPhoneNumber>();
+        public ICollection<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
 
         [MaxLength(50)]
         public string? Location { get; set; }
+
+        public MediaContact(string firstName, string lastName, bool isPressGallery, string? personalWebsite, string email, int jobTitleId, string? location, bool isActive = true)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            IsPressGallery = isPressGallery;
+            PersonalWebsite = personalWebsite;
+            IsActive = isActive;
+            Email = email;
+            JobTitleId = jobTitleId;
+            Location = location;
+        }
+        public MediaContact() { }
     }
 }
