@@ -1,10 +1,6 @@
 [
-  { "Name": "New" },
-  { "Name": "Pending" },
-  { "Name": "Rejected" },
-  { "Name": "Reviewed" },
-  { "Name": "Scheduled" },
-  { "Name": "Unavailable" },
+  { "Name": "In Progress" },
+  { "Name": "Pending Approval" },
   { "Name": "Approved" },
-  { "Name": "Completed" }
+  { "Name": "Closed" }
 ]
