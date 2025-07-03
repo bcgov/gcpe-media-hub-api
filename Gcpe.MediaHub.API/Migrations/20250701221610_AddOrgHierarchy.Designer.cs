@@ -3,6 +3,7 @@ using System;
 using Gcpe.MediaHub.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gcpe.MediaHub.API.Migrations
 {
     [DbContext(typeof(GcpeMediaHubAPIContext))]
-    partial class GcpeMediaHubAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20250701221610_AddOrgHierarchy")]
+    partial class AddOrgHierarchy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.17");
@@ -31,20 +34,11 @@ namespace Gcpe.MediaHub.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("MediaOutletId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Municipality")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Province")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RuralRoute")
@@ -53,9 +47,6 @@ namespace Gcpe.MediaHub.API.Migrations
 
                     b.Property<string>("StateProvince")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Street")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -265,31 +256,6 @@ namespace Gcpe.MediaHub.API.Migrations
                     b.HasIndex("MediaOutletId");
 
                     b.ToTable("MediaOutletContactRelationship");
-                });
-
-            modelBuilder.Entity("Gcpe.MediaHub.API.Models.MediaOutletPhoneNumber", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("MediaOutletId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("MediaOutletPhoneTypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MediaOutletId");
-
-                    b.HasIndex("MediaOutletPhoneTypeId");
-
-                    b.ToTable("MediaOutletPhoneNumbers");
                 });
 
             modelBuilder.Entity("Gcpe.MediaHub.API.Models.MediaOutletPhoneType", b =>
@@ -751,22 +717,6 @@ namespace Gcpe.MediaHub.API.Migrations
                     b.Navigation("MediaOutlet");
                 });
 
-            modelBuilder.Entity("Gcpe.MediaHub.API.Models.MediaOutletPhoneNumber", b =>
-                {
-                    b.HasOne("Gcpe.MediaHub.API.Models.MediaOutlet", "MediaOutlet")
-                        .WithMany("MediaOutletPhoneNumbers")
-                        .HasForeignKey("MediaOutletId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Gcpe.MediaHub.API.Models.MediaOutletPhoneType", "MediaOutletPhoneType")
-                        .WithMany()
-                        .HasForeignKey("MediaOutletPhoneTypeId");
-
-                    b.Navigation("MediaOutlet");
-
-                    b.Navigation("MediaOutletPhoneType");
-                });
-
             modelBuilder.Entity("Gcpe.MediaHub.API.Models.MediaRequest", b =>
                 {
                     b.HasOne("Gcpe.MediaHub.API.Models.User", "AssignedUser")
@@ -928,8 +878,6 @@ namespace Gcpe.MediaHub.API.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("ChildOutlets");
-
-                    b.Navigation("MediaOutletPhoneNumbers");
 
                     b.Navigation("MediaRequests");
 
