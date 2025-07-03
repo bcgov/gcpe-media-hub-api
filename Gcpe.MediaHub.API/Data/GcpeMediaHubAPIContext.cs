@@ -12,6 +12,7 @@ namespace Gcpe.MediaHub.API.Data
 
         public DbSet<MediaContact> MediaContacts { get; set; } = default!;
         public DbSet<MediaOutlet> MediaOutlets { get; set; } = default!;
+        public DbSet<MediaOutletPhoneNumber> MediaOutletPhoneNumbers { get; set; } = default!;
         public DbSet<Address> Addresses { get; set; } = default!;
         public DbSet<MediaContactEmail> MediaContactEmails { get; set; } = default!;
         public DbSet<MediaContactPhone> MediaContactPhone { get; set; } = default!;
@@ -57,6 +58,12 @@ namespace Gcpe.MediaHub.API.Data
                 .HasForeignKey(sm => sm.MediaOutletId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<MediaOutletPhoneNumber>()
+                .HasOne(ph => ph.MediaOutlet)
+                .WithMany(o => o.MediaOutletPhoneNumbers)
+                .HasForeignKey(ph => ph.MediaOutletId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<SocialMedia>()
                 .HasOne(sm => sm.MediaContact)
                 .WithMany(c => c.SocialMedias)
@@ -72,6 +79,12 @@ namespace Gcpe.MediaHub.API.Data
                 .HasOne(p => p.OutletContactRelationship)
                 .WithMany(rel => rel.Emails)
                 .HasForeignKey(p => p.OutletContactRelationshipId);
+
+            modelBuilder.Entity<MediaOutlet>()
+                .HasOne(m => m.ParentOutlet)
+                .WithMany(m => m.ChildOutlets)
+                .HasForeignKey(m => m.ParentOutletId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
