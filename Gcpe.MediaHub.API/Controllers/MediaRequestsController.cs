@@ -88,6 +88,27 @@ namespace Gcpe.MediaHub.API.Controllers
             return mediaRequest;
         }
 
+        // GET: api/MediaRequests/byRequestNo/{requestNo}
+        [HttpGet("byRequestNo/{requestNo}")]
+        public async Task<ActionResult<MediaRequest>> GetMediaRequestByRequestNo(int requestNo)
+        {
+            var mediaRequest = await _context.MediaRequests
+                .Include(c => c.RequestorContact)
+                .Include(m => m.LeadMinistry)
+                .Include(o => o.RequestorOutlet)
+                .Include(s => s.RequestStatus)
+                .Include(t => t.RequestType)
+                .Include(r => r.RequestResolution)
+                .FirstOrDefaultAsync(m => m.RequestNo == requestNo);
+
+            if (mediaRequest == null)
+            {
+                return NotFound();
+            }
+
+            return mediaRequest;
+        }
+
         // PUT: api/MediaRequests/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMediaRequest(Guid id, MediaRequest mediaRequest)
