@@ -63,6 +63,12 @@ namespace Gcpe.MediaHub.API.Data
 
         public static void SeedOutletPhoneTypes(GcpeMediaHubAPIContext context)
         {
+            // Remove child records before parent records to avoid FK errors
+            if (context.MediaOutletPhoneNumbers.Any())
+            {
+                context.MediaOutletPhoneNumbers.RemoveRange(context.MediaOutletPhoneNumbers);
+                context.SaveChanges();
+            }
             if (context.MediaOutletPhoneTypes.Any())
             {
                 context.MediaOutletPhoneTypes.RemoveRange(context.MediaOutletPhoneTypes);
@@ -261,17 +267,30 @@ namespace Gcpe.MediaHub.API.Data
 
             try
             {
-                if (context.MediaContacts.Any())
-                {
-                    context.MediaContacts.RemoveRange(context.MediaContacts);
+                // Remove child records before parent records to avoid FK errors
+                if (context.MediaContactEmails.Any())
+                    context.MediaContactEmails.RemoveRange(context.MediaContactEmails);
+                if (context.MediaContactPhone.Any())
+                    context.MediaContactPhone.RemoveRange(context.MediaContactPhone);
+                if (context.MediaOutletContactRelationship.Any())
                     context.MediaOutletContactRelationship.RemoveRange(context.MediaOutletContactRelationship);
-                    context.SaveChanges();
-                }
+                if (context.MediaContacts.Any())
+                    context.MediaContacts.RemoveRange(context.MediaContacts);
+                context.SaveChanges();
 
+                // Check for required parent records
                 var outlet = context.MediaOutlets.FirstOrDefault();
-                var jobTitleId = context.JobTitles.FirstOrDefault()?.Id ?? 0;
-                var socialCompanyId = context.SocialMediaCompanies.FirstOrDefault()?.Id ?? 0;
-                var contactPhoneTypeId = context.MediaContactPhoneTypes.FirstOrDefault()?.Id ?? 0;
+                if (outlet == null)
+                    throw new Exception("Cannot seed contacts: No MediaOutlet found. Please seed MediaOutlets first.");
+                var jobTitle = context.JobTitles.FirstOrDefault();
+                if (jobTitle == null)
+                    throw new Exception("Cannot seed contacts: No JobTitle found. Please seed JobTitles first.");
+                var socialCompany = context.SocialMediaCompanies.FirstOrDefault();
+                if (socialCompany == null)
+                    throw new Exception("Cannot seed contacts: No SocialMediaCompany found. Please seed SocialMediaCompanies first.");
+                var contactPhoneType = context.MediaContactPhoneTypes.FirstOrDefault();
+                if (contactPhoneType == null)
+                    throw new Exception("Cannot seed contacts: No MediaContactPhoneType found. Please seed MediaContactPhoneTypes first.");
 
                 var bjorn = new MediaContact
                 {
@@ -280,7 +299,7 @@ namespace Gcpe.MediaHub.API.Data
                     Email = "bjorn.patel@gmail.com",
                     IsActive = true,
                     IsPressGallery = true,
-                    JobTitleId = jobTitleId,
+                    JobTitleId = jobTitle.Id,
                     PersonalWebsite = "bjornpatel.com"
                 };
 
@@ -291,7 +310,7 @@ namespace Gcpe.MediaHub.API.Data
                     Email = "rami.chen@gmail.com",
                     IsActive = true,
                     IsPressGallery = true,
-                    JobTitleId = jobTitleId,
+                    JobTitleId = jobTitle.Id,
                     PersonalWebsite = "ramichen.com"
                 };
 
@@ -302,7 +321,7 @@ namespace Gcpe.MediaHub.API.Data
                     Email = "tariq.osullivan@gmail.com",
                     IsActive = true,
                     IsPressGallery = true,
-                    JobTitleId = jobTitleId,
+                    JobTitleId = jobTitle.Id,
                     PersonalWebsite = "tariqosullivan.com"
                 };
 
@@ -313,7 +332,7 @@ namespace Gcpe.MediaHub.API.Data
                 {
                     Company = "Xitter",
                     MediaContactId = bjorn.Id,
-                    SocialMediaCompanyId = socialCompanyId,
+                    SocialMediaCompanyId = socialCompany.Id,
                     SocialProfileUrl = "@bjornpatel"
                 });
 
@@ -321,7 +340,7 @@ namespace Gcpe.MediaHub.API.Data
                 {
                     Company = "Xitter",
                     MediaContactId = rami.Id,
-                    SocialMediaCompanyId = socialCompanyId,
+                    SocialMediaCompanyId = socialCompany.Id,
                     SocialProfileUrl = "@ramich"
                 });
 
@@ -329,14 +348,15 @@ namespace Gcpe.MediaHub.API.Data
                 {
                     Company = "Xitter",
                     MediaContactId = tariq.Id,
-                    SocialMediaCompanyId = socialCompanyId,
+                    SocialMediaCompanyId = socialCompany.Id,
                     SocialProfileUrl = "@tariquo"
                 });
 
-                var bjornOutletRel = new MediaOutletContactRelationship { MediaContactId = bjorn.Id, MediaOutletId = outlet!.Id };
-                var ramiOutletRel = new MediaOutletContactRelationship { MediaContactId = rami.Id, MediaOutletId = outlet!.Id };
-                var tariqOutletRel = new MediaOutletContactRelationship { MediaContactId = tariq.Id, MediaOutletId = outlet!.Id };
+                var bjornOutletRel = new MediaOutletContactRelationship { MediaContactId = bjorn.Id, MediaOutletId = outlet.Id };
+                var ramiOutletRel = new MediaOutletContactRelationship { MediaContactId = rami.Id, MediaOutletId = outlet.Id };
+                var tariqOutletRel = new MediaOutletContactRelationship { MediaContactId = tariq.Id, MediaOutletId = outlet.Id };
                 context.MediaOutletContactRelationship.AddRange(bjornOutletRel, ramiOutletRel, tariqOutletRel); // assign IDs
+                context.SaveChanges();
 
                 context.MediaContactPhone.AddRange(
                     new MediaContactPhone
@@ -344,7 +364,7 @@ namespace Gcpe.MediaHub.API.Data
                         OutletContactRelationshipId = bjornOutletRel.Id,
                         PhoneNumber = "555-555-5555",
                         Extension = "555",
-                        PhoneTypeId = contactPhoneTypeId,
+                        PhoneTypeId = contactPhoneType.Id,
                         IsActive = true,
                     },
                     new MediaContactPhone
@@ -352,7 +372,7 @@ namespace Gcpe.MediaHub.API.Data
                         OutletContactRelationshipId = ramiOutletRel.Id,
                         PhoneNumber = "555-555-5555",
                         Extension = "555",
-                        PhoneTypeId = contactPhoneTypeId,
+                        PhoneTypeId = contactPhoneType.Id,
                         IsActive = true,
                     },
                     new MediaContactPhone
@@ -360,7 +380,7 @@ namespace Gcpe.MediaHub.API.Data
                         OutletContactRelationshipId = tariqOutletRel.Id,
                         PhoneNumber = "555-555-5555",
                         Extension = "555",
-                        PhoneTypeId = contactPhoneTypeId,
+                        PhoneTypeId = contactPhoneType.Id,
                         IsActive = true,
                     }
                 );
@@ -392,7 +412,7 @@ namespace Gcpe.MediaHub.API.Data
             catch (Exception ex)
             {
                 transaction.Rollback();
-                throw;
+                throw new Exception($"Error seeding contacts: {ex.Message}", ex);
             }
         }
 
