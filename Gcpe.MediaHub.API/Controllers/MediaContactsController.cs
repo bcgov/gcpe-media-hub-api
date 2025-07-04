@@ -203,8 +203,8 @@ namespace Gcpe.MediaHub.API.Controllers
                         });
 
                     foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
-                    {
-                        int typeId = _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
+                    {  //Todo: Alex really should have another think about this bizarre null checking...
+                        int typeId =  _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
                         if(typeId > 0)
                             _context.MediaContactPhone.Add(new MediaContactPhone
                             {
