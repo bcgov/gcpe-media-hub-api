@@ -42,7 +42,7 @@ if (builder.Environment.IsDevelopment())
         options.AddDefaultPolicy(
             policy =>
             {
-                policy.WithOrigins("http://localhost:5173", "http://localhost:5229", "http://localhost:7145")
+                policy.WithOrigins("https://localhost:5173", "http://localhost:5229", "http://localhost:7145")
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();

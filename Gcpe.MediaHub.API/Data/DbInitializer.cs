@@ -172,8 +172,41 @@ namespace Gcpe.MediaHub.API.Data
                 OutletName = "CBC",
                 IsMajorMedia = true,
                 Website = "http://www.cbc.ca",
-                Email = "admin@cbc.ca"
+                Email = "admin@cbc.ca",
             };
+
+            cbcNetwork.Addresses.Add(new Address
+            {
+                Street = "450 Simcoe St.",
+                City = "Victoria",
+                Province = "BC",
+                Country = "Canada",
+                PostalCode = "V8V 1L4",
+                MediaOutletId = cbcNetwork.Id
+            });
+
+            cbcNetwork.MediaTypes.Add(context.MediaTypes.FirstOrDefault()!);
+            cbcNetwork.WrittenLanguages.Add(context.WrittenLanguages.FirstOrDefault()!);
+
+            var socialLink = context.SocialMediaCompanies.FirstOrDefault();
+
+            cbcNetwork.SocialMedias.Add(
+                new SocialMedia
+                {
+                    SocialMediaCompanyId = socialLink.Id,
+                    SocialProfileUrl = "http://social.com/@cbc",
+                    MediaOutletId = cbcNetwork.Id
+                });
+
+            var phoneType = context.MediaOutletPhoneTypes.FirstOrDefault();
+
+            cbcNetwork.MediaOutletPhoneNumbers.Add(
+                        new MediaOutletPhoneNumber
+                        {
+                            MediaOutletId = cbcNetwork.Id,
+                            MediaOutletPhoneType = phoneType,
+                            PhoneNumber = "+1555-5555"
+                        });
 
             context.MediaOutlets.Add(cbcNetwork);
             context.SaveChanges();
@@ -187,31 +220,38 @@ namespace Gcpe.MediaHub.API.Data
                 ParentOutletId = cbcNetwork.Id
             };
 
-            var mapleCurrent = new MediaOutlet
+            cbcVancouver.Addresses.Add(new Address
             {
-                OutletName = "Maple Current",
-                IsMajorMedia = true,
-                Website = "http://www.maplecurrent.ca",
-                Email = "admin@maplecurrent.ca"
-            };
+                Street = "450 Simcoe St.",
+                City = "Victoria",
+                Province = "BC",
+                Country = "Canada",
+                PostalCode = "V8V 1L4",
+                MediaOutletId = cbcNetwork.Id
+            });
 
-            var voixDuNord = new MediaOutlet
-            {
-                OutletName = "Voix du Nord",
-                IsMajorMedia = true,
-                Website = "http://www.voixdunord.ca",
-                Email = "admin@voixdunord.ca"
-            };
+            cbcVancouver.MediaTypes.Add(context.MediaTypes.FirstOrDefault()!);
+            cbcVancouver.WrittenLanguages.Add(context.WrittenLanguages.FirstOrDefault()!);
 
-            var trueNorth = new MediaOutlet
-            {
-                OutletName = "True North Pulse Media",
-                IsMajorMedia = true,
-                Website = "http://www.truenorthpulsemedia.ca",
-                Email = "admin@truenorthpulsemedia.ca"
-            };
+            cbcVancouver.SocialMedias.Add(
+                new SocialMedia
+                {
+                    SocialMediaCompanyId = socialLink.Id,
+                    SocialProfileUrl = "http://social.com/@cbcvancouver",
+                    MediaOutletId = cbcNetwork.Id
+                });
 
-            context.MediaOutlets.AddRange(cbcVancouver, mapleCurrent, voixDuNord, trueNorth);
+
+            cbcVancouver.MediaOutletPhoneNumbers.Add(
+                        new MediaOutletPhoneNumber
+                        {
+                            MediaOutletId = cbcNetwork.Id,
+                            MediaOutletPhoneType = phoneType,
+                            PhoneNumber = "+1555-5555"
+                        });
+
+
+            context.MediaOutlets.AddRange(cbcVancouver);
             context.SaveChanges();
         }
 
