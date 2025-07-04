@@ -45,7 +45,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     Email = contact.Email,
                     IsActive = contact.IsActive,
                     JobTitle = contact.JobTitle?.Name ?? "",
-                 //   PhoneNumbers = contact.PhoneNumbers,
+                    //   PhoneNumbers = contact.PhoneNumbers,
 
                     MediaOutletContactRelationships = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
                     {
@@ -53,7 +53,7 @@ namespace Gcpe.MediaHub.API.Controllers
                         OutletEmail = rel.MediaOutlet.Email,
                         ContactEmails = rel.Emails.Select(e => e.EmailAddress).ToList(),
                         //ContactPhones = rel.PhoneNumbers, 
-                            
+
                     }).ToList(),
                     Requests = contact.MediaRequests.Select(rel => new MediaRequestDto
                     {
@@ -169,69 +169,84 @@ namespace Gcpe.MediaHub.API.Controllers
         [HttpPost]
         public async Task<ActionResult<MediaContact>> PostContact(MediaContactDto contact)
         {
-
-            // Todo: validation check to see if contact already exists.
-            int jobTitleId = 1; //TODO: talk to the team to get clarification on this 
-            // First, create the new MediaContact so we can attach media relations, etc. to it.
-            MediaContact newContact = new MediaContact(contact.FirstName, 
-                contact.LastName, 
-                contact.IsPressGallery, 
-                contact.PersonalWebsite, 
-                contact.Email,
-                jobTitleId,
-                null,
-                contact.IsActive
-                );
-            _context.MediaContacts.Add(newContact);
-
-            // lets do MediaOutletContactRelations now
-            foreach (ContactOutletDto outletRelationship in contact.MediaOutletContactRelationships)
+            try
             {
-                MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
-                relationship.MediaOutletId = outletRelationship.OutletId;
-                relationship.MediaContactId = newContact.Id;
-                _context.MediaOutletContactRelationship.Add(relationship); // need that id for what's next
-                foreach(string email in outletRelationship.ContactEmails)
-                    _context.MediaContactEmails.Add(new MediaContactEmail { EmailAddress = email,
-                        OutletContactRelationshipId = relationship.Id,
-                        IsActive = true
-                    });
 
-                foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
-                    _context.MediaContactPhone.Add(new MediaContactPhone { OutletContactRelationshipId = relationship.Id,
-                        PhoneNumber = phone.PhoneLineNumber,
-                        PhoneTypeId = _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name == phone.PhoneType).Id
-                    });
-            }
 
-            //// contact phone numbers next:
-            //foreach(PhoneNumberDto phone in contact.PhoneNumbers)
-            //{
-            //    int lineNumber;
-            //    int.TryParse(phone.PhoneLineNumber, out lineNumber);
-            //    _context.PhoneNumbers.Add(new PhoneNumber
-            //    {
-            //        ContactId = newContact.Id,
-            //        PhoneNumber = new PhoneNumber { PhoneType = phone.PhoneType, PhoneLineNumber = lineNumber }
-            //    });
-            //}
+                // Todo: validation check to see if contact already exists.
+                int jobTitleId = 1; //TODO: talk to the team to get clarification on this 
+                                    // First, create the new MediaContact so we can attach media relations, etc. to it.
+                MediaContact newContact = new MediaContact(contact.FirstName,
+                    contact.LastName,
+                    contact.IsPressGallery,
+                    contact.PersonalWebsite,
+                    contact.Email,
+                    jobTitleId,
+                    null,
+                    contact.IsActive
+                    );
+                _context.MediaContacts.Add(newContact);
 
-            foreach(SocialMediaDto social in contact.SocialMedias)
-            {
-                if (social.CompanyId != null)
+                // lets do MediaOutletContactRelations now
+                foreach (ContactOutletDto outletRelationship in contact.MediaOutletContactRelationships)
                 {
-                    _context.SocialMedias.Add(new SocialMedia
-                    {
-                        MediaContactId = newContact.Id,
-                        SocialMediaCompanyId = social.CompanyId,
-                        SocialProfileUrl = social.Url
-                    });
+                    MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
+                    relationship.MediaOutletId = outletRelationship.OutletId;
+                    relationship.MediaContactId = newContact.Id;
+                    _context.MediaOutletContactRelationship.Add(relationship); // need that id for what's next
+                    foreach (string email in outletRelationship.ContactEmails)
+                        _context.MediaContactEmails.Add(new MediaContactEmail
+                        {
+                            EmailAddress = email,
+                            OutletContactRelationshipId = relationship.Id,
+                            IsActive = true
+                        });
+
+                    foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
+                    {  //Todo: Alex really should have another think about this bizarre null checking...
+                        int typeId =  _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
+                        if(typeId > 0)
+                            _context.MediaContactPhone.Add(new MediaContactPhone
+                            {
+                                OutletContactRelationshipId = relationship.Id,
+                                PhoneNumber = phone.PhoneLineNumber,
+                                PhoneTypeId = typeId
+                            });
+                    }
                 }
+                //// contact phone numbers next:
+                //foreach(PhoneNumberDto phone in contact.PhoneNumbers)
+                //{
+                //    int lineNumber;
+                //    int.TryParse(phone.PhoneLineNumber, out lineNumber);
+                //    _context.PhoneNumbers.Add(new PhoneNumber
+                //    {
+                //        ContactId = newContact.Id,
+                //        PhoneNumber = new PhoneNumber { PhoneType = phone.PhoneType, PhoneLineNumber = lineNumber }
+                //    });
+                //}
+
+                foreach (SocialMediaDto social in contact.SocialMedias)
+                {
+                    if (social.CompanyId != null)
+                    {
+                        _context.SocialMedias.Add(new SocialMedia
+                        {
+                            MediaContactId = newContact.Id,
+                            SocialMediaCompanyId = social.CompanyId,
+                            SocialProfileUrl = social.Url
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
             }
-
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Contacts/5
@@ -282,7 +297,7 @@ namespace Gcpe.MediaHub.API.Controllers
         public string JobTitle { get; set; } = "";
         public bool IsPressGallery { get; set; } = false;
         public string? PersonalWebsite { get; set; } = string.Empty;
-       // public List<PhoneNumberDto> PhoneNumbers { get; set; } = new();
+        // public List<PhoneNumberDto> PhoneNumbers { get; set; } = new();
         public List<ContactOutletDto> MediaOutletContactRelationships { get; set; } = new();
         public List<MediaRequestDto> Requests { get; set; } = new();
         public List<SocialMediaDto> SocialMedias { get; set; } = new();
