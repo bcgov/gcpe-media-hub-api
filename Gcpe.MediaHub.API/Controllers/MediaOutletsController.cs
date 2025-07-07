@@ -211,7 +211,7 @@ namespace Gcpe.MediaHub.API.Controllers
                 WrittenLanguages = await _context.WrittenLanguages.ToListAsync(),
                 MediaTypes = await _context.MediaTypes.ToListAsync(),
                 PhoneTypes = await _context.MediaOutletPhoneTypes.ToListAsync(),
-                MediaOutlets = await _context.MediaOutlets.ToListAsync(),
+                MediaOutlets = await _context.MediaOutlets.Where(o => o.ParentOutletId == null).ToListAsync(),
                 SocialMediaTypes = await _context.SocialMediaCompanies.ToListAsync(),
             };
 
