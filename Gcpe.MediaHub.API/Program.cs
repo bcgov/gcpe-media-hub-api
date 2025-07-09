@@ -75,8 +75,10 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
     try
     {
-        // Only seed if database is empty
-        if (!context.MediaContacts.Any() && !context.MediaRequests.Any())
+        var enableSeeding = builder.Configuration.GetValue<bool>("DatabaseSeeding:EnableSeeding", false);
+
+        // Only seed if database is empty and seeding is enabled
+        if (enableSeeding)
         {
             DbInitializer.SeedAll(context);
         }
