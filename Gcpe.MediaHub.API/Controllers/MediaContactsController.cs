@@ -51,7 +51,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     {
                         OutletName = rel.MediaOutlet.OutletName,
                         OutletEmail = rel.MediaOutlet.Email,
-                        ContactEmails = rel.Emails.Select(e => e.EmailAddress).ToList(),
+                        ContactEmail = rel.Emails.Select(e => e.EmailAddress).FirstOrDefault(),//.ToList(),
                         //ContactPhones = rel.PhoneNumbers, 
 
                     }).ToList(),
@@ -174,7 +174,7 @@ namespace Gcpe.MediaHub.API.Controllers
 
 
                 // Todo: validation check to see if contact already exists.
-                int jobTitleId = 1; //TODO: talk to the team to get clarification on this 
+                int jobTitleId = 0; //TODO: talk to the team to get clarification on this 
                                     // First, create the new MediaContact so we can attach media relations, etc. to it.
                 MediaContact newContact = new MediaContact(contact.FirstName,
                     contact.LastName,
@@ -193,42 +193,32 @@ namespace Gcpe.MediaHub.API.Controllers
                     MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
                     relationship.MediaOutletId = outletRelationship.OutletId;
                     relationship.MediaContactId = newContact.Id;
-                    _context.MediaOutletContactRelationship.Add(relationship); // need that id for what's next
-                    foreach (string email in outletRelationship.ContactEmails)
-                        _context.MediaContactEmails.Add(new MediaContactEmail
-                        {
-                            EmailAddress = email,
-                            OutletContactRelationshipId = relationship.Id,
-                            IsActive = true
-                        });
 
-                    foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
-                    {  //Todo: Alex really should have another think about this bizarre null checking...
-                        int typeId =  _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
-                        if(typeId > 0)
-                            _context.MediaContactPhone.Add(new MediaContactPhone
-                            {
-                                OutletContactRelationshipId = relationship.Id,
-                                PhoneNumber = phone.PhoneLineNumber,
-                                PhoneTypeId = typeId
-                            });
-                    }
+                    _context.MediaOutletContactRelationship.Add(relationship); // need that id for what's next
+                    //foreach (string email in outletRelationship.ContactEmails)
+                    //    _context.MediaContactEmails.Add(new MediaContactEmail
+                    //    {
+                    //        EmailAddress = email,
+                    //        OutletContactRelationshipId = relationship.Id,
+                    //        IsActive = true
+                    //    });
+
+                    //foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
+                    //{  //Todo: Alex really should have another think about this bizarre null checking...
+                    //    int typeId =  _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
+                    //    if(typeId > 0)
+                    //        _context.MediaContactPhone.Add(new MediaContactPhone
+                    //        {
+                    //            OutletContactRelationshipId = relationship.Id,
+                    //            PhoneNumber = phone.PhoneLineNumber,
+                    //            PhoneTypeId = typeId
+                    //        });
+                    //}
                 }
-                //// contact phone numbers next:
-                //foreach(PhoneNumberDto phone in contact.PhoneNumbers)
-                //{
-                //    int lineNumber;
-                //    int.TryParse(phone.PhoneLineNumber, out lineNumber);
-                //    _context.PhoneNumbers.Add(new PhoneNumber
-                //    {
-                //        ContactId = newContact.Id,
-                //        PhoneNumber = new PhoneNumber { PhoneType = phone.PhoneType, PhoneLineNumber = lineNumber }
-                //    });
-                //}
 
                 foreach (SocialMediaDto social in contact.SocialMedias)
                 {
-                    if (social.CompanyId != null)
+                    if (social.CompanyId > 0)
                     {
                         _context.SocialMedias.Add(new SocialMedia
                         {
@@ -239,7 +229,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     }
                 }
 
-                await _context.SaveChangesAsync();
+              //  await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
             }
