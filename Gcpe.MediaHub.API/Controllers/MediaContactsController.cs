@@ -192,6 +192,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
                     relationship.MediaOutletId = outletRelationship.OutletId;
                     relationship.MediaContactId = newContact.Id;
+                    relationship.Title = contact.JobTitle;
 
                     _context.MediaOutletContactRelationship.Add(relationship); // need that id for what's next
 
