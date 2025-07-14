@@ -449,7 +449,7 @@ namespace Gcpe.MediaHub.API.Data
             context.SaveChanges();  
         }
 
-        public static void SeedContacts(GcpeMediaHubAPIContext context)
+        public static void SeedContactsFromCsv(GcpeMediaHubAPIContext context)
         {
             using var transaction = context.Database.BeginTransaction();
             try
@@ -1000,7 +1000,7 @@ namespace Gcpe.MediaHub.API.Data
             if (seedFromCsv)
             {
                 SeedMediaOutletsFromCsv(context);
-                SeedContacts(context);
+                SeedContactsFromCsv(context);
                 SeedUsersFromCsv(context);
                 SeedMediaRequestsFromCsv(context);
             }
@@ -1085,6 +1085,7 @@ namespace Gcpe.MediaHub.API.Data
                 DateTimeOffset.TryParse(Get("Request_Deadline"), out var deadline);
                 var leadMinistryAbbr = Get("Request_LeadMinistry");
                 var assignedToIDIR = Get("Request_AssignedTo");
+                var requestDetails = Get("Request_Details");
                 // Ignore Request_No from CSV, always generate
 
                 var leadMinistry = context.Ministries.FirstOrDefault(m => m.Acronym == leadMinistryAbbr) ?? context.Ministries.FirstOrDefault();
@@ -1136,7 +1137,8 @@ namespace Gcpe.MediaHub.API.Data
                     AssignedUserId = assignedUser?.Id,
                     RequestStatusId = requestStatus?.Id,
                     RequestTypeId = requestType?.Id,
-                    RequestNo = nextRequestNo++ // Always generate unique integer
+                    RequestNo = nextRequestNo++, // Always generate unique integer
+                    RequestDetails = requestDetails
                 };
                 context.MediaRequests.Add(request);
             }
