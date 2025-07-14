@@ -76,11 +76,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var enableSeeding = builder.Configuration.GetValue<bool>("DatabaseSeeding:EnableSeeding", false);
-
-        // Only seed if database is empty and seeding is enabled
+        var seedFromCsv = builder.Configuration.GetValue<bool>("DatabaseSeeding:SeedFromCsv", false);
+        // Only seed if seeding is enabled
         if (enableSeeding)
         {
-            DbInitializer.SeedAll(context);
+            DbInitializer.SeedAll(context, seedFromCsv: seedFromCsv);
         }
     }
     catch (Exception ex)

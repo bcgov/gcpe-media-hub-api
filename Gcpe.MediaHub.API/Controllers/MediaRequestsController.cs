@@ -62,7 +62,9 @@ namespace Gcpe.MediaHub.API.Controllers
                 AdditionalMinistriesAbbr = r.AdditionalMinistries?.Select(m => m.Acronym ?? string.Empty).ToList() ?? new List<string>(),
                 AssignedToFullName = r.AssignedUser?.FullName ?? string.Empty,
                 RequestStatus = r.RequestStatus?.Name ?? string.Empty
-            }).ToList();
+            })
+            .OrderByDescending(dto => dto.ReceivedOn)
+            .ToList();
 
             return dtos;
         }
