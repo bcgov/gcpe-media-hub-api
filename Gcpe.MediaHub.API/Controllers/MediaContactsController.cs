@@ -185,7 +185,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     );
 
                 _context.MediaContacts.Add(newContact);
-                await _context.SaveChangesAsync();
+          
                 // lets do MediaOutletContactRelations now
                 foreach (ContactOutletDto outletRelationship in contact.MediaOutletContactRelationships)
                 {
@@ -216,7 +216,6 @@ namespace Gcpe.MediaHub.API.Controllers
                             });
                     }
                 }
-                await _context.SaveChangesAsync();
 
                 foreach (SocialMediaDto social in contact.SocialMedias)
                 {
@@ -231,7 +230,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     }
                 }
 
-                //  await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
             }
