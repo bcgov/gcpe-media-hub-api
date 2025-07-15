@@ -185,12 +185,12 @@ namespace Gcpe.MediaHub.API.Controllers
                     );
 
                 _context.MediaContacts.Add(newContact);
-          
+
                 // lets do MediaOutletContactRelations now
                 foreach (ContactOutletDto outletRelationship in contact.MediaOutletContactRelationships)
                 {
                     MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
-                    relationship.MediaOutletId = outletRelationship.OutletId;
+                    relationship.MediaOutletId = _context.MediaOutlets.First().Id;  //outletRelationship.OutletId;
                     relationship.MediaContactId = newContact.Id;
                     relationship.Title = contact.JobTitle;
 
@@ -204,15 +204,22 @@ namespace Gcpe.MediaHub.API.Controllers
                         IsActive = true
                     });
 
+                    int typeId = _context.MediaContactPhoneTypes.FirstOrDefault().Id;
+                    _context.MediaContactPhone.Add(new MediaContactPhone
+                    {
+                        OutletContactRelationshipId = relationship.Id,
+                        PhoneNumber = outletRelationship.PhoneNumber,
+                        PhoneTypeId = typeId
+                    });
                     foreach (MediaContactPhoneDto phone in outletRelationship.ContactPhones)
                     {  //Todo: Alex really should have another think about this bizarre null checking...
-                        int typeId = _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
-                        if (typeId > 0)
+                        int typeId2 = _context.MediaContactPhoneTypes.FirstOrDefault(x => x.Name.ToLower() == phone.PhoneType.ToLower()).Id;
+                        if (typeId2 > 0)
                             _context.MediaContactPhone.Add(new MediaContactPhone
                             {
                                 OutletContactRelationshipId = relationship.Id,
                                 PhoneNumber = phone.PhoneLineNumber,
-                                PhoneTypeId = typeId
+                                PhoneTypeId = typeId2
                             });
                     }
                 }
