@@ -50,6 +50,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     MediaOutletContactRelationships = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
                     {
                         OutletName = rel.MediaOutlet.OutletName,
+                        OutletId = rel.MediaOutlet.Id,
                         OutletEmail = rel.MediaOutlet.Email,
                         ContactEmail = rel.Emails.Select(e => e.EmailAddress).FirstOrDefault(),//.ToList(),
                         //ContactPhones = rel.PhoneNumbers, 
@@ -190,7 +191,7 @@ namespace Gcpe.MediaHub.API.Controllers
                 foreach (ContactOutletDto outletRelationship in contact.MediaOutletContactRelationships)
                 {
                     MediaOutletContactRelationship relationship = new MediaOutletContactRelationship();
-                    relationship.MediaOutletId = _context.MediaOutlets.First().Id;  //outletRelationship.OutletId;
+                    relationship.MediaOutletId = outletRelationship.OutletId;
                     relationship.MediaContactId = newContact.Id;
                     relationship.Title = contact.JobTitle;
 
