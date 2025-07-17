@@ -34,8 +34,11 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.PhoneNumbers)
                     .Include(c => c.MediaRequests)
+                    .Include(c => c.SocialMedias)
                     //.Include(c => c.PhoneNumbers)
                     .ToListAsync();
+
+                var socialMedias = _context.SocialMedias;
 
                 var result = contacts.Select(contact => new MediaContactDto
                 {
@@ -61,6 +64,11 @@ namespace Gcpe.MediaHub.API.Controllers
                         Id = rel.Id,
                         RequestTitle = rel.RequestTitle,
                         LeadMinistry = rel.LeadMinistry,
+                    }).ToList(),
+                    SocialMedias = contact.SocialMedias.Select(rel => new SocialMediaDto
+                    {
+                        CompanyId = rel.SocialMediaCompanyId,
+                        Url = rel.SocialProfileUrl,
                     }).ToList(),
                 }).ToList();
 
