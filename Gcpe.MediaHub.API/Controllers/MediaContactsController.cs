@@ -48,6 +48,8 @@ namespace Gcpe.MediaHub.API.Controllers
                     Email = contact.Email,
                     IsActive = contact.IsActive,
                     JobTitle = contact.JobTitle?.Name ?? "",
+                    PersonalWebsite = contact.PersonalWebsite,
+                    IsPressGallery = contact.IsPressGallery,
                     //   PhoneNumbers = contact.PhoneNumbers,
 
                     MediaOutletContactRelationships = contact.MediaOutletContactRelationships.Select(rel => new ContactOutletDto
