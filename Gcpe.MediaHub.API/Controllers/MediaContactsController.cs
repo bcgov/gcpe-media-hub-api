@@ -58,6 +58,7 @@ namespace Gcpe.MediaHub.API.Controllers
                         OutletId = rel.MediaOutlet.Id,
                         OutletEmail = rel.MediaOutlet.Email,
                         ContactEmail = rel.Emails.Select(e => e.EmailAddress).FirstOrDefault(),//.ToList(),
+                        IsMajorMedia = rel.MediaOutlet.IsMajorMedia,
                         //ContactPhones = rel.PhoneNumbers, 
 
                     }).ToList(),
