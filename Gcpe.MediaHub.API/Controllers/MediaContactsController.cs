@@ -34,6 +34,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.PhoneNumbers)
                     .Include(c => c.MediaRequests)
+                        .ThenInclude(r => r.RequestStatus)
                     .Include(c => c.SocialMedias)
                     //.Include(c => c.PhoneNumbers)
                     .ToListAsync();
@@ -67,6 +68,9 @@ namespace Gcpe.MediaHub.API.Controllers
                         Id = rel.Id,
                         Title = rel.RequestTitle,
                         LeadMinistry = rel.LeadMinistry,
+                        StatusId = (rel.RequestStatus != null)? rel.RequestStatus.Id : 0,
+                        StatusName = (rel.RequestStatus != null) ? rel.RequestStatus.Name : string.Empty,
+                        RequestNo = rel.RequestNo
                     }).ToList(),
                     SocialMedias = contact.SocialMedias.Select(rel => new SocialMediaDto
                     {
