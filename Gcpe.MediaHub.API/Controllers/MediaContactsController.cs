@@ -65,7 +65,7 @@ namespace Gcpe.MediaHub.API.Controllers
                     Requests = contact.MediaRequests.Select(rel => new MediaRequestDto
                     {
                         Id = rel.Id,
-                        RequestTitle = rel.RequestTitle,
+                        Title = rel.RequestTitle,
                         LeadMinistry = rel.LeadMinistry,
                     }).ToList(),
                     SocialMedias = contact.SocialMedias.Select(rel => new SocialMediaDto
