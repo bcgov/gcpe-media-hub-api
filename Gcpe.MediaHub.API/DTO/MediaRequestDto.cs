@@ -12,5 +12,6 @@ namespace Gcpe.MediaHub.API.DTO
         public int StatusId { get; set; }
         public string? StatusName { get; set; } = string.Empty;
         public int RequestNo { get; set; }
+        public ICollection<Ministry> AdditionalMinistries { get; set; } = new List<Ministry>();
     }
 }
