@@ -77,6 +77,8 @@ namespace Gcpe.MediaHub.API.Controllers
                         StatusName = (rel.RequestStatus != null) ? rel.RequestStatus.Name : string.Empty,
                         RequestNo = rel.RequestNo,
                         AdditionalMinistries = rel.AdditionalMinistries,
+                        Deadline = rel.Deadline,
+                        ReceivedOn = rel.ReceivedOn,
                     }).ToList(),
                     SocialMedias = contact.SocialMedias.Select(rel => new SocialMediaDto
                     {
