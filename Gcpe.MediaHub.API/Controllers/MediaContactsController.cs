@@ -35,6 +35,11 @@ namespace Gcpe.MediaHub.API.Controllers
                         .ThenInclude(rel => rel.PhoneNumbers)
                     .Include(c => c.MediaRequests)
                         .ThenInclude(r => r.RequestStatus)
+                        .Include(c => c.MediaRequests)
+                        .ThenInclude(r => r.LeadMinistry)
+                        .Include(c => c.MediaRequests)
+                        .ThenInclude(r => r.AdditionalMinistries)
+
                     .Include(c => c.SocialMedias)
                     //.Include(c => c.PhoneNumbers)
                     .ToListAsync();
@@ -68,7 +73,7 @@ namespace Gcpe.MediaHub.API.Controllers
                         Id = rel.Id,
                         Title = rel.RequestTitle,
                         LeadMinistry = rel.LeadMinistry,
-                        StatusId = (rel.RequestStatus != null)? rel.RequestStatus.Id : 0,
+                        StatusId = (rel.RequestStatus != null) ? rel.RequestStatus.Id : 0,
                         StatusName = (rel.RequestStatus != null) ? rel.RequestStatus.Name : string.Empty,
                         RequestNo = rel.RequestNo,
                         AdditionalMinistries = rel.AdditionalMinistries,
@@ -296,7 +301,7 @@ namespace Gcpe.MediaHub.API.Controllers
         }
 
         [HttpGet("GetJobTitles")]
-        public  IEnumerable<JobTitle> GetJobTitles()
+        public IEnumerable<JobTitle> GetJobTitles()
         {
             return _context.JobTitles.ToList();
         }
