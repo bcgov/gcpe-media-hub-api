@@ -307,6 +307,36 @@ namespace Gcpe.MediaHub.API.Controllers
         {
             return _context.JobTitles.ToList();
         }
+
+        // GET: api/MediaContacts/for-dropdown
+        [HttpGet("for-dropdown")]
+        public async Task<ActionResult<IEnumerable<MediaContactSimpleDto>>> GetContactsForDropdown()
+        {
+            try
+            {
+                var contacts = await _context.MediaContacts
+                    .Include(c => c.JobTitle)
+                    .Where(c => c.IsActive)
+                    .ToListAsync();
+
+                var result = contacts.Select(contact => new MediaContactSimpleDto
+                {
+                    Id = contact.Id,
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    Email = contact.Email,
+                    JobTitle = contact.JobTitle?.Name ?? "",
+                    FullName = $"{contact.FirstName} {contact.LastName}"
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         private bool ContactExists(Guid id)
         {
             return _context.MediaContacts.Any(e => e.Id == id);
