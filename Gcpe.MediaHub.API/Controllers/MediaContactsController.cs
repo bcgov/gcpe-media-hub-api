@@ -28,19 +28,19 @@ namespace Gcpe.MediaHub.API.Controllers
                 var contacts = await _context.MediaContacts
                     .Include(c => c.JobTitle)
                     .Include(c => c.MediaOutletContactRelationships)
-                        .ThenInclude(rel => rel.MediaOutlet)
+                        .ThenInclude(rel => rel.MediaOutlet).AsNoTracking()
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.Emails)
                     .Include(c => c.MediaOutletContactRelationships)
                         .ThenInclude(rel => rel.PhoneNumbers)
                     .Include(c => c.MediaRequests)
-                        .ThenInclude(r => r.RequestStatus)
+                        .ThenInclude(r => r.RequestStatus).AsNoTracking()
                         .Include(c => c.MediaRequests)
-                        .ThenInclude(r => r.LeadMinistry)
+                        .ThenInclude(r => r.LeadMinistry).AsNoTracking()
                         .Include(c => c.MediaRequests)
-                        .ThenInclude(r => r.AdditionalMinistries)
+                        .ThenInclude(r => r.AdditionalMinistries).AsNoTracking()
 
-                    .Include(c => c.SocialMedias)
+                    .Include(c => c.SocialMedias).AsNoTracking()
                     //.Include(c => c.PhoneNumbers)
                     .ToListAsync();
 
